@@ -31,7 +31,7 @@
 		}
 		try {
 			require([
-				"/config"
+				"/config.js"
 			], function(config) {
 				requirejs.config(config);
 				loader = function(uri, callback) {
