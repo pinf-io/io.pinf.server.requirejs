@@ -2,63 +2,17 @@
 const ASSERT = require("assert");
 const PATH = require("path");
 const FS = require("fs-extra");
-const EXPRESS = require("express");
 const SEND = require("send");
 
 
-var PORT = process.env.PORT || 8080;
+require("io.pinf.server.www").for(module, __dirname, null, function(app) {
 
-exports.main = function(callback) {
-	try {
+    app.get("/lib/require.js", function (req, res, next) {
+		return SEND(req, "/require.js")
+			.root(PATH.join(__dirname, "node_modules/requirejs"))
+			.on('error', next)
+			.pipe(res);
+    });
 
-	    var app = EXPRESS();
-
-	    app.configure(function() {
-	        app.use(EXPRESS.logger());
-	        app.use(EXPRESS.cookieParser());
-	        app.use(EXPRESS.bodyParser());
-	        app.use(EXPRESS.methodOverride());
-	        app.use(app.router);
-	    });
-
-
-	    app.get("/lib/require.js", function (req, res, next) {
-			return SEND(req, "/require.js")
-				.root(PATH.join(__dirname, "node_modules/requirejs"))
-				.on('error', next)
-				.pipe(res);
-	    });
-
-	    app.get("/favicon.ico", function (req, res, next) {
-	    	return res.end();
-	    });
-
-	    app.get(/^\//, function (req, res, next) {
-			return SEND(req, req._parsedUrl.pathname)
-				.root(PATH.join(__dirname, "www"))
-				.on('error', next)
-				.pipe(res);
-	    });
-
-		var server = app.listen(PORT);
-
-		console.log("Listening at: http://localhost:" + PORT);
-
-	    return callback(null, {
-	        server: server
-	    });
-	} catch(err) {
-		return callback(err);
-	}
-}
-
-if (require.main === module) {
-	return exports.main(function(err) {
-		if (err) {
-			console.error(err.stack);
-			process.exit(1);
-		}
-		// Keep server running.
-	});
-}
+});
 
