@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "pm": "npm",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinf-io/io.pinf.server.requirejs"
+  },
   "dependencies": {
     "q": "~1.0.0",
     "glob": "~3.2.9",
